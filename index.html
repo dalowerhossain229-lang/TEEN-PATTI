@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TEEN PATTI CASINO KING</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 🎰 ক্যাসিনো হেডার প্যানেল -->
+    <div class="header">
+        <div class="brand">
+            <div class="name">TEEN PATTI</div>
+            <div class="game">3-CARD ROYAL SHOWDOWN</div>
+        </div>
+        <div class="header-right">
+            <button class="sound-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+            <div class="balance-box">৳ <span id="user-balance">0.00</span></div>
+        </div>
+    </div>
+
+    <!-- 🃏 [ডিলার / হাউজ ৩-তাসের শোডাউন জোন] -->
+    <div class="dealer-battle-zone">
+        <div class="zone-title">DEALER HAND</div>
+        <div class="cards-row">
+            <div class="playing-card" id="dealer-card-1">🎴</div>
+            <div class="playing-card" id="dealer-card-2">🎴</div>
+            <div class="playing-card" id="dealer-card-3">🎴</div>
+        </div>
+    </div>
+
+    <!-- 🤠 [প্লেয়ার ৩-তাসের লাইভ জোন] -->
+    <div class="player-battle-zone">
+        <div class="zone-title">YOUR HAND</div>
+        <div class="cards-row">
+            <div class="playing-card" id="player-card-1">🎴</div>
+            <div class="playing-card" id="player-card-2">🎴</div>
+            <div class="playing-card" id="player-card-3">🎴</div>
+        </div>
+    </div>
+
+    <!-- 🏆 ইন-লাইন লাইভ বাজি ধরার ৩টি প্রধান ক্যাসিনো ঘর ভাই ভাই -->
+    <div class="betting-board">
+        <button class="bet-board-btn player-win-btn" id="board-player" onclick="selectBetSide('PLAYER')">
+            <span class="board-label">PLAYER WIN 👤</span>
+            <span class="board-odds">x2.00</span>
+        </button>
+        
+        <button class="bet-board-btn dealer-win-btn" id="board-dealer" onclick="selectBetSide('DEALER')">
+            <span class="board-label">DEALER WIN 🃏</span>
+            <span class="board-odds">x2.00</span>
+        </button>
+    </div>
+
+    <!-- 🏆 ইন-লাইন লাইভ স্কোরিং মেসেজ বার -->
+    <div class="win-status-container" id="win-status-box">
+        <span id="win-text-msg">PLAYER বা DEALER সিলেক্ট করে SEE CARDS বোতাম চাপুন ভাই!</span>
+    </div>
+
+    <!-- 🎛️ কন্ট্রোল প্যানেল এরিয়া (৳১-৳২০০০ প্লাস-মাইনাস ও SEE CARDS বোতাম পাশাপাশি লক ভাই) -->
+    <div class="footer-controls">
+        <div class="play-section">
+            <div class="bet-selector">
+                <button class="bet-btn-nav" onclick="adjustBet('minus')">−</button>
+                <div style="text-align: center; width: 60px;">
+                    <div style="font-size: 9px; color: #aaa; font-weight: bold;">BET</div>
+                    <div style="font-size: 15px; font-weight: 900; color: #fff;" id="bet-display">৳৫০</div>
+                </div>
+                <button class="bet-btn-nav" onclick="adjustBet('plus')">+</button>
+            </div>
+
+            <button class="play-btn" id="spin-btn" onclick="handleTeenPattiShowdown()">SEE CARDS</button>
+
+            <div class="icon-group">
+                <button class="icon-btn" id="auto-btn" onclick="toggleAuto()">🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔌 [উইনগো কালার ট্রেড সিঙ্ক - ইউনিভার্সাল সকেট ইঞ্জিন লাইব্রেরি ভাই] -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
+        const urlWallet = urlParams.get('wallet') || "main";
+        
+        const SERVER_URL = window.location.origin;
+
+        let balance = 0.00;
+        let currentBet = 50; 
+        let selectedOption = null; // PLAYER, DEALER
+        let isSpinning = false; 
+        let isAuto = false;
+        let isMuted = false;
+        let autoInterval = null;
+
+        if (typeof io !== 'undefined') {
+            const socket = io();
+            socket.on("balanceUpdate", (data) => {
+                if (data && data.username === urlUserId) {
+                    if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+                    fetchLiveBalance();
+                }
+            });
+        }
+
+        async function fetchLiveBalance() {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/teenpatti-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+                const data = await response.json();
+                if (data && data.success) {
+                    balance = parseFloat(data.balance);
+                    document.getElementById("user-balance").innerText = balance.toFixed(2);
+                }
+            } catch (e) { console.error("Balance link issues"); }
+        }
+
+        window.onload = () => {
+            if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+            fetchLiveBalance();
+        };
+
+        function selectBetSide(side) {
+            if (isSpinning) return;
+            selectedOption = side;
+            
+            document.querySelectorAll(".bet-board-btn").forEach(b => b.classList.remove("active-side-bet"));
+            if (side === 'PLAYER') document.getElementById("board-player").classList.add("active-side-bet");
+            if (side === 'DEALER') document.getElementById("board-dealer").classList.add("active-side-bet");
+            
+            playAudio('click');
+        }
+
+        function adjustBet(action) {
+            if (isSpinning) return;
+            if (action === 'minus' && currentBet > 1) {
+                if (currentBet <= 10) currentBet -= 1;
+                else if (currentBet <= 100) currentBet -= 10;
+                else currentBet -= 50;
+            }
+            if (action === 'plus' && currentBet < 2000) {
+                if (currentBet < 10) currentBet += 1;
+                else if (currentBet < 100) currentBet += 10;
+                else currentBet += 50;
+            }
+            if (currentBet < 1) currentBet = 1;
+            if (currentBet > 2000) currentBet = 2000;
+            
+            document.getElementById("bet-display").innerText = `৳${currentBet}`;
+            playAudio('click');
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById("mute-btn").innerText = isMuted ? "🔇" : "🔊";
+            document.getElementById("mute-btn").classList.toggle("muted-active", isMuted);
+        }
+
+                function toggleAuto() {
+            isAuto = !isAuto;
+            document.getElementById("auto-btn").classList.toggle("active", isAuto);
+            if (isAuto && !isSpinning) handleTeenPattiShowdown();
+            playAudio('click');
+        }
+
+        async function handleTeenPattiShowdown() {
+            if (isSpinning) return;
+            if (!selectedOption) {
+                alert("🚨 আগে বাজি ধরার যেকোনো ১টি পক্ষ (PLAYER বা DEALER) সিলেক্ট করুন ভাই!");
+                isAuto = false;
+                document.getElementById("auto-btn").classList.remove("active");
+                return;
+            }
+
+            const dc1 = document.getElementById("dealer-card-1");
+            const dc2 = document.getElementById("dealer-card-2");
+            const dc3 = document.getElementById("dealer-card-3");
+            const pc1 = document.getElementById("player-card-1");
+            const pc2 = document.getElementById("player-card-2");
+            const pc3 = document.getElementById("player-card-3");
+            const msgBox = document.getElementById("win-status-box");
+            
+            msgBox.className = "win-status-container";
+            document.getElementById("win-text-msg").innerText = "🃏 ডিলার তাস বন্টন করছে...";
+
+            // ৬টি তাসের ওল্ড কার্ড টাইট রিসেট এবং ৩ডি এনিমেশন বাউন্স ভাই ভাই
+            const allCards = [dc1, dc2, dc3, pc1, pc2, pc3];
+            allCards.forEach(c => {
+                c.className = "playing-card card-dealing";
+                c.innerText = "🎴";
+                c.style.color = "#000000";
+            });
+
+            isSpinning = true;
+            document.getElementById("spin-btn").disabled = true;
+
+            // 🚀 তাস শাফল ও ডিল হওয়ার কড়া সাউন্ড spin2.mp3 ফায়ার লক ভাই!
+            playAudio('spin');
+
+            try {
+                const response = await fetch(`${SERVER_URL}/api/teenpatti-deal`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: urlUserId,
+                        amount: parseFloat(currentBet),
+                        wallet: urlWallet,
+                        prediction: selectedOption
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data && data.success === true) {
+                    balance = parseFloat(data.balance);
+                    if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+                    if (window.top) window.top.postMessage({ action: "refresh_wallet" }, "*");
+
+                    // ৩ সেকেন্ডের ৩ডি কার্ড ফিজিক্স মোশন শেষ হওয়ার পর একে একে দুই পক্ষের কার্ডগুলো ওপেন হবে ভাই
+                    setTimeout(() => {
+                        // ১. ডিলারের ৩টি কার্ড সোজা ওপেন লক ভাই ভাই
+                        dc1.className = "playing-card"; dc1.innerText = `${data.dealerHand[0].value}${data.dealerHand[0].suit}`;
+                        if (data.dealerHand[0].suit === "♥️" || data.dealerHand[0].suit === "♦️") dc1.style.color = "#ea2027";
+                        
+                        dc2.className = "playing-card"; dc2.innerText = `${data.dealerHand[1].value}${data.dealerHand[1].suit}`;
+                        if (data.dealerHand[1].suit === "♥️" || data.dealerHand[1].suit === "♦️") dc2.style.color = "#ea2027";
+                        
+                        dc3.className = "playing-card"; dc3.innerText = `${data.dealerHand[2].value}${data.dealerHand[2].suit}`;
+                        if (data.dealerHand[2].suit === "♥️" || data.dealerHand[2].suit === "♦️") dc3.style.color = "#ea2027";
+
+                        // ২. প্লেয়ারের ৩টি কার্ড সোজা ওপেন লক ভাই ভাই
+                        pc1.className = "playing-card"; pc1.innerText = `${data.playerHand[0].value}${data.playerHand[0].suit}`;
+                        if (data.playerHand[0].suit === "♥️" || data.playerHand[0].suit === "♦️") pc1.style.color = "#ea2027";
+                        
+                        pc2.className = "playing-card"; pc2.innerText = `${data.playerHand[1].value}${data.playerHand[1].suit}`;
+                        if (data.playerHand[1].suit === "♥️" || data.playerHand[1].suit === "♦️") pc2.style.color = "#ea2027";
+                        
+                        pc3.className = "playing-card"; pc3.innerText = `${data.playerHand[2].value}${data.playerHand[2].suit}`;
+                        if (data.playerHand[2].suit === "♥️" || data.playerHand[2].suit === "♦️") pc3.style.color = "#ea2027";
+
+                        showFinalResult(data.status, data.winAmount, data.winnerSide, data.playerCombo, data.dealerCombo);
+                    }, 3000);
+
+                } else {
+                    alert(data.message || "❌ Insufficient Balance! Please Recharge.");
+                    stopDealState();
+                }
+            } catch (err) {
+                alert("⚠️ সেশন আউট! আবার SEE CARDS বোতাম চাপুন ভাই ভাই।");
+                stopDealState();
+            }
+        }
+
+        function showFinalResult(status, winAmount, winnerSide, playerCombo, dealerCombo) {
+            const msgBox = document.getElementById("win-status-box");
+            const textMsg = document.getElementById("win-text-msg");
+
+            const sideNameBengali = (winnerSide === "PLAYER") ? "PLAYER 👤" : "DEALER 🃏";
+            const winnerComboName = (winnerSide === "PLAYER") ? playerCombo : dealerCombo;
+
+            if (status === "win") {
+                // 🎵 বাজি জিতে টাকা ডবল হওয়ামাত্রই win2.mp3 রাজকীয় সাউন্ড ফায়ার লক ভাই!
+                playAudio('win');
+                msgBox.className = "win-status-container win-glow-bar";
+                textMsg.innerText = `🏆 মেগা উইন!! বিজয়ী পক্ষ: ${sideNameBengali} [${winnerComboName}] (৳${winAmount})`;
+            } else {
+                msgBox.className = "win-status-container lose-glow-bar";
+                textMsg.innerText = `❌ বিজয়ী পক্ষ: ${sideNameBengali} [${winnerComboName}]। এই রাউন্ডে লাভ হয়নি ভাই!`;
+            }
+
+            document.getElementById("user-balance").innerText = balance.toFixed(2);
+            stopDealState();
+
+            if (isAuto) {
+                autoInterval = setTimeout(() => {
+                    if (isAuto) handleTeenPattiShowdown();
+                }, 2000);
+            }
+        }
+
+        function stopDealState() {
+            isSpinning = false;
+            document.getElementById("spin-btn").disabled = false;
+            if (!isAuto && autoInterval) clearTimeout(autoInterval);
+        }
+
+        // 🎯 [আপনার রিকোয়ারমেন্ট অনুযায়ী ৩টি প্রিমিয়াম সাউন্ড ও বাফার গেটওয়ে লক ভাই ভাই]
+        const slotSounds = {
+            click: new Audio('click2.mp3'),
+            spin: new Audio('spin2.mp3'),
+            win: new Audio('win2.mp3')
+        };
+        Object.values(slotSounds).forEach(s => s.load());
+
+        function playAudio(type) { 
+            if (isMuted) return; // 🔇 সাউন্ড অফ থাকলে কোনো অডিও প্লে হবে না ভাই ভাই!
+            try { 
+                slotSounds[type].currentTime = 0; 
+                slotSounds[type].play(); 
+            } catch(e){} 
+        }
+    </script>
+</body>
+</html>
+
