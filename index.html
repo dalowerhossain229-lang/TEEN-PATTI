@@ -181,7 +181,7 @@
             playAudio('click');
         }
 
-                function selectBetSide(side) {
+                  function selectBetSide(side) {
             if (isSpinning) return;
             selectedSide = side; 
             document.getElementById("side-PLAYER").classList.remove("active-side-bet");
@@ -190,7 +190,7 @@
             playAudio('click');
         }
 
-        // 🎰 [🎰 ৫২-কার্ড পিউর গিটহাব ফাইলের নাম মিলিয়ে কার্ড ডিলিং এনিমেশন ইঞ্জিন]
+        // 🎰 [🎰 ৫২-কার্ড পিউর গিটহাব বড় হাতের ফাইলনেম মিলিয়ে কার্ড ডিলিং এনিমেশন ইঞ্জিন]
         function animateTeenPattiCards(serverGameData) {
             playAudio('spin');
 
@@ -207,13 +207,15 @@
             let cardTick = 0;
             let dealInterval = setInterval(() => {
                 if (cardTick < 3) {
-                    // প্লেয়ার ও ডিলারের কার্ড ইমেজ পাথ তৈরি (e.g., images/cards/A_spades.png)
-                    let pCardObj = pCards[cardTick][0]; // ২-ডি অ্যারে বাস্কেট বর্ম থেকে পিউর অবজেক্ট রিড
-                    let pFileName = `${pCardObj.rank}_${suitNameMap[pCardObj.suit]}.png`;
+                    // 🔒 [বড় হাতের অক্ষরের ফাইলনেম ম্যাপিং বর্ম]: আপনার স্ক্রিনশটের হুবহু ওরিজিনাল UPPERCASE ফরম্যাট লক ওস্তাদ!
+                    let suitNameMap = { '♠': 'SPADES', '♥': 'HEARTS', '♦': 'DIAMONDS', '♣': 'CLUBS' };
+                    
+                    let pCardObj = pCards[cardTick][0] || pCards[cardTick];
+                    let pFileName = `${pCardObj.rank}_of_${suitNameMap[pCardObj.suit]}.png`;
                     document.getElementById(`p-card-${cardTick}`).innerHTML = `<img src="images/cards/${pFileName}" alt="Card">`;
 
-                    let dCardObj = dCards[cardTick][0];
-                    let dFileName = `${dCardObj.rank}_${suitNameMap[dCardObj.suit]}.png`;
+                    let dCardObj = dCards[cardTick][0] || dCards[cardTick];
+                    let dFileName = `${dCardObj.rank}_of_${suitNameMap[dCardObj.suit]}.png`;
                     document.getElementById(`d-card-${cardTick}`).innerHTML = `<img src="images/cards/${dFileName}" alt="Card">`;
                     
                     playAudio('click');
@@ -221,7 +223,6 @@
                 } else {
                     clearInterval(dealInterval);
                     
-                    // কার্ড ডিলিং শেষ হতেই ফাইনাল রিওয়ার্ড সেটেলমেন্ট ফায়ার ওস্তাদ!
                     if (serverGameData.balance !== undefined) {
                         balance = parseFloat(serverGameData.balance);
                     }
@@ -261,7 +262,6 @@
                     let targetGamePayload = serverRes.gameData || serverRes;
                     animateTeenPattiCards(targetGamePayload);
                 } else {
-                    // 🛑 [ব্যালেন্স জিরো ব্লকার অ্যালার্ট]: নোড থেকে জিরো ব্যালেন্স নোটিশ আসলে সরাসরি স্ক্রিনে ফ্লাশ লক!
                     alert(serverRes.message || "❌ আপনার অ্যাকাউন্ট ব্যালেন্স জিরো বা অপ্রতুল! দয়া করে রিচার্জ করুন ওস্তাদ।");
                     stopPattiState();
                 }
@@ -281,7 +281,7 @@
             } else {
                 playAudio('wheel');
                 if (msgBox) msgBox.className = "win-status-container lose-glow-bar";
-                if (textMsg) textMsg.innerHTML = `💥 ওহ হো লস ওস্তাদ! ডিলারের স্কোর হাই পড়েছে। আবার অন ফায়ার কদম ফেলুন ভাই ভাই!`;
+                if (textMsg) textMsg.innerHTML = `💥 ওহ হো লস ওস্তাদ! ডিলারের স্কোর হাই পড়েছে। আবার On Fire কদম ফেলুন ভাই ভাই!`;
             }
 
             if (typeof balance !== 'undefined' && !isNaN(balance)) {
@@ -359,5 +359,4 @@
     </script>
 </body>
 </html>
-
-
+      
