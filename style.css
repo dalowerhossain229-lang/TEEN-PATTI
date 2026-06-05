@@ -30,13 +30,11 @@ body {
     position: relative;
 }
 
-/* 🏟️ লাক্সারি তিন পাত্তি গ্রীন কার্পেট বেটিং টেবিল বোর্ড */
 .casino-table-surface {
     position: relative;
     width: 100%;
     max-width: 450px;
-    height: 320px;
-    margin: 15px auto 0 auto;
+    height: 310px; /* 👈 ওরিজিনাল ৩২০ থেকে কমিয়ে ৩১০ করুন */
     background: radial-gradient(circle at center, #0d5c31 0%, #06381c 80%, #031f0e 100%);
     border: 8px solid #664614;
     border-radius: 60px;
@@ -45,10 +43,11 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    padding: 15px 0;
+    padding: 10px 0; /* 👈 ওরিজিনাল ১৫ থেকে কমিয়ে ১০ করুন */
     box-sizing: border-box;
     z-index: 1;
 }
+
 
 /* 🃏 কার্ড ডিলিং কন্টেইনার স্লট গ্রিড */
 .card-row-zone {
@@ -87,17 +86,17 @@ body {
     100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* 🎯 অরিজিনাল বেটিং সাইড সিলেকশন বোর্ড */
 .bet-side-selector-container {
     display: flex;
     justify-content: center;
     gap: 20px;
     width: 100%;
     max-width: 450px;
-    margin: 5px auto;
+    margin: 5px auto 8px auto; /* 👈 শেষ ভ্যালুটি ৫ থেকে বাড়িয়ে ৮ করুন */
     padding: 0 15px;
     box-sizing: border-box;
 }
+
 
 .bet-side-box {
     flex: 1;
@@ -149,15 +148,15 @@ body {
     letter-spacing: 0.3px;
 }
 
-/* 🎛️ নিচের মেইন গেম কন্ট্রোল প্যানেল ফুটার (ক্লিক লক ১০০% ওপেন বর্ম ভাই ভাই) */
 .footer-controls {
     position: relative;
-    z-index: 50; /* অদৃশ্য লেয়ারের ওপরে ভেসে থাকতে ওয়ান-শটে ৫০ এ লক ওস্তাদ! */
+    z-index: 50; 
     background: #07090e;
     border-top: 1px solid #161b29;
-    padding: 10px 15px 25px 15px;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+    padding: 15px 15px 38px 15px; /* 👈 ওরিজিনাল ২৫ থেকে বাড়িয়ে ৩৮ করুন ওস্তাদ */
+    box-shadow: 0 -8px 25px rgba(0,0,0,0.7);
 }
+
 
 .play-section {
     display: flex;
