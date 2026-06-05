@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TEEN PATTI - LIVE CASINO</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 🎨 লাইভ ক্যাসিনো গ্র্যান্ড টেবিল সিএসএস ফ্রেম ইনজেকশন ভাই ভাই */
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #070a0e; font-family: 'Segoe UI', Roboto, sans-serif; color: #fff; -webkit-tap-highlight-color: transparent; user-select: none; }
+        .header { display: none !important; } 
+        
+        body { 
+            background: radial-gradient(circle at center, #0f1c30 0%, #05070c 100%); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            height: 100vh; 
+        }
+
+        /* 🏟️ লাক্সারি তিন পাত্তি গ্রীন কার্পেট বেটিং টেবিল বোর্ড */
+        .casino-table-surface {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 320px;
+            margin: 15px auto 0 auto;
+            background: radial-gradient(circle at center, #0d5c31 0%, #06381c 80%, #031f0e 100%);
+            border: 8px solid #664614;
+            border-radius: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 0;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        /* 🃏 কার্ড ডিলিং কন্টেইনার স্লট গ্রিড */
+        .card-row-zone { display: flex; justify-content: center; gap: 8px; min-height: 85px; width: 100%; align-items: center; }
+        .card-holder-node {
+            width: 58px;
+            height: 82px;
+            background: rgba(255,255,255,0.03);
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            transition: all 0.2s ease;
+        }
+        .card-holder-node img { width: 100%; height: 100%; object-fit: contain; border-radius: 4px; filter: drop-shadow(0 3px 5px rgba(0,0,0,0.6)); }
+
+        /* 🎯 অরিজিনাল বেটিং সাইড সিলেকশন বোর্ড */
+        .bet-side-selector-container { display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 450px; margin: 5px auto; padding: 0 15px; box-sizing: border-box; }
+        .bet-side-box {
+            flex: 1;
+            background: linear-gradient(180deg, #18233c 0%, #0e1626 100%);
+            border: 2px solid #28395c;
+            border-radius: 12px;
+            padding: 12px 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #aaa;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.15s ease;
+        }
+        .bet-side-box.active-side-bet {
+            border-color: #ffbb00 !important;
+            color: #ffbb00 !important;
+            background: linear-gradient(180deg, #2c2105 0%, #140f02 100%) !important;
+            box-shadow: 0 0 15px rgba(255,187,0,0.35), inset 0 0 10px rgba(255,187,0,0.2) !important;
+        }
+
+        .label-text { font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+
+        /* 📢 লাইভ মেসেজ প্যানেল বার */
+        .win-status-container { position: relative; z-index: 10; text-align: center; padding: 10px; margin: 5px 12px; background: rgba(9, 12, 18, 0.6); border-radius: 10px; border: 1px solid rgba(255,255,255,0.02); }
+        #win-text-msg { font-size: 12px; font-weight: 700; color: #38bdf8; letter-spacing: 0.3px; }
+
+        /* 🎛️ নিচের মেইন গেম কন্ট্রোল প্যানেল ফুটার */
+        .footer-controls { position: relative; z-index: 50; background: #07090e; border-top: 1px solid #161b29; padding: 10px 15px 25px 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.6); }
+        .play-section { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 450px; margin: 0 auto; }
+        .bet-btn-nav { background: #111522; border: 1px solid #20293d; color: #ffaa00; font-size: 18px; font-weight: 800; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .play-btn { flex: 1; background: linear-gradient(180deg, #ffbb00 0%, #d48800 100%); color: #000; font-size: 16px; font-weight: 900; border: none; padding: 12px 0; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(212,136,0,0.3); }
+        .play-btn:disabled { background: #141721 !important; border-color: #1f2536 !important; color: #4b5563 !important; box-shadow: none !important; cursor: not-allowed; }
+        .icon-btn { background: #111522; border: 1px solid #20293d; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #ffaa00; font-weight: bold; }
+        .icon-btn.active { background: #ffaa00; color: #000; box-shadow: 0 0 10px rgba(255,170,0,0.4); }
+
+        .win-glow-bar { border-color: rgba(0, 255, 136, 0.4) !important; background: rgba(0, 255, 136, 0.05) !important; }
+        .win-glow-bar #win-text-msg { color: #00ff88 !important; }
+        .lose-glow-bar { border-color: rgba(255, 51, 102, 0.4) !important; background: rgba(255, 51, 102, 0.05) !important; }
+        .lose-glow-bar #win-text-msg { color: #ff3366 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="header" style="display:none !important;">
+        <div class="balance-box">৳ <span id="user-balance">0.00</span></div>
+    </div>
+
+    <!-- 🏟️ লাক্সারি তিন পাত্তি গ্রীন কার্পেট বেটিং টেবিল বোর্ড -->
+    <div class="casino-table-surface">
+        <!-- ডিলার জোনের ৩টি কার্ড স্লট -->
+        <div style="text-align:center; width:100%;">
+            <div class="label-text" style="color:#ffbb00;">♣ DEALER HAND ♣</div>
+            <div class="card-row-zone" id="dealer-cards-row">
+                <div class="card-holder-node" id="d-card-0"></div>
+                <div class="card-holder-node" id="d-card-1"></div>
+                <div class="card-holder-node" id="d-card-2"></div>
+            </div>
+        </div>
+
+        <!-- প্লেয়ার জোনের ৩টি কার্ড স্লট -->
+        <div style="text-align:center; width:100%;">
+            <div class="label-text" style="color:#38bdf8;">♥ PLAYER HAND ♥</div>
+            <div class="card-row-zone" id="player-cards-row">
+                <div class="card-holder-node" id="p-card-0"></div>
+                <div class="card-holder-node" id="p-card-1"></div>
+                <div class="card-holder-node" id="p-card-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎯 অরিজিনাল বেটিং সাইড সিলেকশন বোর্ড -->
+    <div class="bet-side-selector-container">
+        <div class="bet-side-box" id="side-PLAYER" onclick="selectBetSide('PLAYER')">PLAYER</div>
+        <div class="bet-side-box" id="side-DEALER" onclick="selectBetSide('DEALER')">DEALER</div>
+    </div>
+
+    <!-- 📢 উইন-লস লাইভ ক্যাসিনো মেসেজ প্যানেল বার -->
+    <div class="win-status-container" id="win-status-box">
+        <span id="win-text-msg">সাইড সিলেক্ট করে চাল চালুন ওস্তাদ ভাই ভাই!</span>
+    </div>
+
+    <!-- 🎛️ অ্যাকশন কন্ট্রোল ফুটার প্যানেল বার -->
+    <div class="footer-controls">
+        <div class="play-section">
+            <button class="bet-btn-nav" onclick="adjustBet('minus')">-</button>
+            <div style="text-align: center; width: 65px;">
+                <div style="font-size: 9px; color: #aaa; font-weight: bold;">STAKE</div>
+                <div style="font-size: 15px; font-weight: 900; color: #fff;" id="bet-display">৳৫০</div>
+            </div>
+            <button class="bet-btn-nav" onclick="adjustBet('plus')">+</button>
+
+            <button class="play-btn" id="spin-btn" onclick="handleTeenPattiRoll()">PLACE BET</button>
+            
+            <div class="icon-group">
+                <button class="icon-btn" id="auto-btn" onclick="toggleAuto()">🤖</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
+        const urlWallet = urlParams.get('wallet') || "main";
+        const SERVER_URL = window.location.origin;
+
+        let balance = 0.00;
+        let currentBet = 50;
+        let isSpinning = false;
+        let isAuto = false;
+        let selectedSide = null;
+        let autoInterval = null;
+
+        // 🃏 গিটহাব কার্ড স্যুট রেন্ডার পাথ ডিরেক্টরি ম্যাপার ভাই ভাই
+        const suitNameMap = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
+
+        function adjustBet(action) {
+            if (isSpinning) return;
+            if (action === 'minus' && currentBet > 50) currentBet -= 50;
+            if (action === 'plus' && currentBet < 20000) currentBet += 50;
+            document.getElementById("bet-display").innerText = `৳${currentBet}`;
+            playAudio('click');
+        }
+
+                function selectBetSide(side) {
+            if (isSpinning) return;
+            selectedSide = side; 
+            document.getElementById("side-PLAYER").classList.remove("active-side-bet");
+            document.getElementById("side-DEALER").classList.remove("active-side-bet");
+            document.getElementById(`side-${side}`).classList.add("active-side-bet");
+            playAudio('click');
+        }
+
+        // 🎰 [🎰 ৫২-কার্ড পিউর গিটহাব ফাইলের নাম মিলিয়ে কার্ড ডিলিং এনিমেশন ইঞ্জিন]
+        function animateTeenPattiCards(serverGameData) {
+            playAudio('spin');
+
+            let pCards = serverGameData.playerCards;
+            let dCards = serverGameData.dealerCards;
+
+            // পূর্ববর্তী রাউন্ডের ভিজ্যুয়াল বিলীন লক
+            for (let i = 0; i < 3; i++) {
+                document.getElementById(`p-card-${i}`).innerHTML = "";
+                document.getElementById(`d-card-${i}`).innerHTML = "";
+            }
+
+            // ওস্তাদ! কার্ডগুলো ১টি ১টি করে হাই-স্পিড এনিমেশনে টেবিলে ডিল হবে!
+            let cardTick = 0;
+            let dealInterval = setInterval(() => {
+                if (cardTick < 3) {
+                    // প্লেয়ার ও ডিলারের কার্ড ইমেজ পাথ তৈরি (e.g., images/cards/A_spades.png)
+                    let pCardObj = pCards[cardTick][0]; // ২-ডি অ্যারে বাস্কেট বর্ম থেকে পিউর অবজেক্ট রিড
+                    let pFileName = `${pCardObj.rank}_${suitNameMap[pCardObj.suit]}.png`;
+                    document.getElementById(`p-card-${cardTick}`).innerHTML = `<img src="images/cards/${pFileName}" alt="Card">`;
+
+                    let dCardObj = dCards[cardTick][0];
+                    let dFileName = `${dCardObj.rank}_${suitNameMap[dCardObj.suit]}.png`;
+                    document.getElementById(`d-card-${cardTick}`).innerHTML = `<img src="images/cards/${dFileName}" alt="Card">`;
+                    
+                    playAudio('click');
+                    cardTick++;
+                } else {
+                    clearInterval(dealInterval);
+                    
+                    // কার্ড ডিলিং শেষ হতেই ফাইনাল রিওয়ার্ড সেটেলমেন্ট ফায়ার ওস্তাদ!
+                    if (serverGameData.balance !== undefined) {
+                        balance = parseFloat(serverGameData.balance);
+                    }
+                    showFinalTeenPattiReward(serverGameData.status, serverGameData.winAmount);
+                }
+            }, 450);
+        }
+
+        async function handleTeenPattiRoll() {
+            if (isSpinning || isSpinning === true) return; 
+            if (!selectedSide) {
+                alert("🔒 চাল দেওয়ার আগে PLAYER অথবা DEALER সাইড সিলেক্ট করুন ওস্তাদ!");
+                return;
+            }
+
+            isSpinning = true;
+            if (document.getElementById("spin-btn")) document.getElementById("spin-btn").disabled = true;
+            if (document.getElementById("win-status-box")) document.getElementById("win-status-box").className = "win-status-container";
+            if (document.getElementById("win-text-msg")) document.getElementById("win-text-msg").innerText = "🃏 ৫২-কার্ড ডেক শাফলিং করে ৩টি করে কার্ড ডিল করা হচ্ছে ওস্তাদ...";
+            playAudio('click');
+
+            try {
+                const response = await fetch(`${SERVER_URL}/api/teenpatti-deal`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: urlUserId, amount: parseFloat(currentBet), wallet: urlWallet, prediction: selectedSide
+                    })
+                });
+
+                const serverRes = await response.json();
+                
+                if (serverRes.success || serverRes.success === true) {
+                    let parsedLiveBalance = serverRes.balance || serverRes.data?.balance || balance;
+                    balance = parseFloat(parsedLiveBalance);
+                    
+                    let targetGamePayload = serverRes.gameData || serverRes;
+                    animateTeenPattiCards(targetGamePayload);
+                } else {
+                    // 🛑 [ব্যালেন্স জিরো ব্লকার অ্যালার্ট]: নোড থেকে জিরো ব্যালেন্স নোটিশ আসলে সরাসরি স্ক্রিনে ফ্লাশ লক!
+                    alert(serverRes.message || "❌ আপনার অ্যাকাউন্ট ব্যালেন্স জিরো বা অপ্রতুল! দয়া করে রিচার্জ করুন ওস্তাদ।");
+                    stopPattiState();
+                }
+            } catch (err) {
+                stopPattiState();
+            }
+        }
+
+        function showFinalTeenPattiReward(status, winAmount) {
+            const msgBox = document.getElementById("win-status-box");
+            const textMsg = document.getElementById("win-text-msg");
+            
+            if (status === "win") {
+                playAudio('win');
+                if (msgBox) msgBox.className = "win-status-container win-glow-bar";
+                if (textMsg) textMsg.innerHTML = `🎉 গ্র্যান্ড উইন ওস্তাদ! ৩-কার্ড র্যাঙ্কিংয়ে আপনার সাইট জিতেছে এবং ওয়ালেটে ৳${winAmount} ক্রেডিট হয়েছে ভাই ভাই!`;
+            } else {
+                playAudio('wheel');
+                if (msgBox) msgBox.className = "win-status-container lose-glow-bar";
+                if (textMsg) textMsg.innerHTML = `💥 ওহ হো লস ওস্তাদ! ডিলারের স্কোর হাই পড়েছে। আবার অন ফায়ার কদম ফেলুন ভাই ভাই!`;
+            }
+
+            if (typeof balance !== 'undefined' && !isNaN(balance)) {
+                if (document.getElementById("user-balance")) {
+                    document.getElementById("user-balance").innerText = balance.toFixed(2);
+                }
+            }
+
+            setTimeout(() => { fetchLiveBalance(); }, 1500);
+            stopPattiState();
+
+            if (isAuto) {
+                autoInterval = setTimeout(() => {
+                    if (isAuto) handleTeenPattiRoll();
+                }, 3500);
+            }
+        }
+
+        if (typeof io !== 'undefined') {
+            const socket = io();
+            socket.on("balanceUpdate", (data) => {
+                if (data && data.username === urlUserId) {
+                    if (data.balance !== undefined) {
+                        balance = parseFloat(data.balance);
+                        if (document.getElementById("user-balance")) {
+                            document.getElementById("user-balance").innerText = balance.toFixed(2);
+                        }
+                    }
+                    if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+                }
+            });
+        }
+
+        async function fetchLiveBalance() {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/teenpatti-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+                const serverData = await response.json();
+                if (serverData.success || serverData.balance !== undefined) {
+                    balance = parseFloat(serverData.balance);
+                    if (document.getElementById("user-balance")) {
+                        document.getElementById("user-balance").innerText = balance.toFixed(2);
+                    }
+                }
+            } catch (e) { console.error("Balance stream link check pass"); }
+        }
+
+        window.onload = () => {
+            if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+            fetchLiveBalance();
+        };
+
+        function toggleAuto() {
+            isAuto = !isAuto;
+            const autoEl = document.getElementById("auto-btn");
+            if (autoEl) autoEl.classList.toggle('active', isAuto);
+            if (isAuto && !isSpinning) handleTeenPattiRoll();
+            playAudio('click');
+        }
+
+        function stopPattiState() {
+            isSpinning = false;
+            if (document.getElementById("spin-btn")) document.getElementById("spin-btn").disabled = false;
+            if (!isAuto && autoInterval) clearTimeout(autoInterval);
+        }
+
+        const slotSounds = {
+            click: new Audio('spin2.mp3'), spin: new Audio('spin2.mp3'),
+            win: new Audio('win2.mp3'), wheel: new Audio('spin2.mp3')
+        };
+        Object.values(slotSounds).forEach(s => s.load());
+
+        function playAudio(type) {
+            try { slotSounds[type].currentTime = 0; slotSounds[type].play(); } catch(e) {}
+        }
+    </script>
+</body>
+</html>
+
+
