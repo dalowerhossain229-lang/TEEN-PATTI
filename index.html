@@ -190,7 +190,7 @@
             playAudio('click');
         }
 
-        // 🎰 [🎰 ৫২-কার্ড পিউর গিটহাব বড় হাতের ফাইলনেম মিলিয়ে কার্ড ডিলিং এনিমেশন ইঞ্জিন]
+        // 🎰 [🎰 ৫২-কার্ড পিউর গিটহাব বড় হাতের অবজেক্ট ইনডেক্স মিলিয়ে কার্ড ডিলিং এনিমেশন ইঞ্জিন]
         function animateTeenPattiCards(serverGameData) {
             playAudio('spin');
 
@@ -207,13 +207,15 @@
             let cardTick = 0;
             let dealInterval = setInterval(() => {
                 if (cardTick < 3) {
-                    // 🔒 [বড় হাতের অক্ষরের ফাইলনেম ম্যাপিং বর্ম]: আপনার স্ক্রিনশটের হুবহু ওরিজিনাল UPPERCASE ফরম্যাট লক ওস্তাদ!
+                    // 🔒 [অবজেক্ট ইনডেক্সিং জিরো লক]: আপনার স্ক্রিনশটের ভাঙা ছবি ওড়াতে সরাসরি [0] ইনডেক্স রিড বর্ম গেঁথে দেওয়া হলো!
                     let suitNameMap = { '♠': 'SPADES', '♥': 'HEARTS', '♦': 'DIAMONDS', '♣': 'CLUBS' };
                     
+                    // প্লেয়ারের কার্ড অবজেক্টের পেটে সরাসরি জিরো নোড রিড ট্রিক
                     let pCardObj = pCards[cardTick][0] || pCards[cardTick];
                     let pFileName = `${pCardObj.rank}_of_${suitNameMap[pCardObj.suit]}.png`;
                     document.getElementById(`p-card-${cardTick}`).innerHTML = `<img src="images/cards/${pFileName}" alt="Card">`;
 
+                    // ডিলারের কার্ড অবজেক্টের পেটে সরাসরি জিরো নোড রিড ট্রিক
                     let dCardObj = dCards[cardTick][0] || dCards[cardTick];
                     let dFileName = `${dCardObj.rank}_of_${suitNameMap[dCardObj.suit]}.png`;
                     document.getElementById(`d-card-${cardTick}`).innerHTML = `<img src="images/cards/${dFileName}" alt="Card">`;
@@ -359,4 +361,4 @@
     </script>
 </body>
 </html>
-      
+                        
